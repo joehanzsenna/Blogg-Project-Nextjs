@@ -4,9 +4,10 @@
 
 import NextAuth from "next-auth/next";
 import bcrypt from 'bcrypt'
-import User from "@/models/User";
+// import User from "@/models/User";
 import { connect } from "@/Utils/mongodb";
 import CredentialsProvider from "next-auth/providers/credentials"
+import Profile from "@/models/Profile";
 
 export const authOptions = {
   // Configure one or more authentication providers
@@ -20,7 +21,7 @@ export const authOptions = {
         },async authorize(credentials) {
             await connect()
             try{
-                const user = await User.findOne({username: credentials.username})
+                const user = await Profile.findOne({username: credentials.username})
                 if(user){
                     const isPasswordCorrect = await bcrypt.compare(
                         credentials.password,
@@ -35,7 +36,7 @@ export const authOptions = {
             }
         },
     }),
-   
+
     // ...add more providers here
   ],
   callbacks: {
